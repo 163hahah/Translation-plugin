@@ -1,0 +1,290 @@
+{
+  "name": "youdao-translate",
+  "displayName": "翻译[好用]",
+  "description": "选中单词或段落即可翻译，支持有道翻译、腾讯翻译君、百度翻译（悬停 / 翻译面板 / 右键 / 快捷键 / 替换）",
+  "version": "0.4.0",
+  "publisher": "liangliang-ai",
+  "license": "MIT",
+  "icon": "media/logo-128.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/163hahah/Translation-plugin-.git"
+  },
+  "homepage": "https://github.com/163hahah/Translation-plugin-#readme",
+  "bugs": {
+    "url": "https://github.com/163hahah/Translation-plugin-/issues"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "translate",
+    "translator",
+    "youdao",
+    "tencent",
+    "baidu",
+    "翻译",
+    "有道",
+    "腾讯翻译君",
+    "百度翻译"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "youdaoTranslate.translate",
+        "title": "翻译[好用]：翻译选中内容"
+      },
+      {
+        "command": "youdaoTranslate.replace",
+        "title": "翻译[好用]：翻译并替换选中内容"
+      },
+      {
+        "command": "youdaoTranslate.setKeys",
+        "title": "翻译[好用]：打开设置",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "youdaoTranslate.openPanel",
+        "title": "翻译[好用]：在翻译面板中打开"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "lingoLens",
+          "title": "翻译[好用]",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "lingoLens": [
+        {
+          "type": "webview",
+          "id": "lingoLens.translator",
+          "name": "翻译"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "youdaoTranslate.setKeys",
+          "when": "view == lingoLens.translator",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "youdaoTranslate.openPanel",
+          "when": "editorHasSelection",
+          "group": "navigation@102"
+        },
+        {
+          "command": "youdaoTranslate.translate",
+          "when": "editorHasSelection",
+          "group": "navigation@100"
+        },
+        {
+          "command": "youdaoTranslate.replace",
+          "when": "editorHasSelection && !editorReadonly",
+          "group": "navigation@101"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "youdaoTranslate.openPanel",
+        "key": "ctrl+alt+y",
+        "mac": "cmd+alt+y"
+      },
+      {
+        "command": "youdaoTranslate.translate",
+        "key": "ctrl+alt+t",
+        "mac": "cmd+alt+t",
+        "when": "editorTextFocus && editorHasSelection"
+      },
+      {
+        "command": "youdaoTranslate.replace",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus && editorHasSelection && !editorReadonly"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "翻译[好用]",
+        "properties": {
+          "youdaoTranslate.provider": {
+            "type": "string",
+            "default": "youdao",
+            "order": 0,
+            "enum": [
+              "youdao",
+              "tencent",
+              "baidu"
+            ],
+            "enumItemLabels": [
+              "有道翻译",
+              "腾讯翻译君",
+              "百度翻译"
+            ],
+            "enumDescriptions": [
+              "有道智云文本翻译，单词查询带音标和词典释义",
+              "腾讯云机器翻译，每月 500 万字符免费额度",
+              "百度翻译开放平台通用文本翻译"
+            ],
+            "markdownDescription": "翻译渠道。悬停、右键、快捷键和翻译面板都使用这里选择的渠道（面板顶部也可以切换）"
+          },
+          "youdaoTranslate.enableHover": {
+            "type": "boolean",
+            "default": true,
+            "description": "选中文本后鼠标悬停在选区上时自动显示翻译"
+          },
+          "youdaoTranslate.targetLanguage": {
+            "type": "string",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "zh-CHS",
+              "en",
+              "ja",
+              "ko",
+              "fr",
+              "de",
+              "ru",
+              "es"
+            ],
+            "enumDescriptions": [
+              "自动：含中文翻成英文，否则翻成中文",
+              "简体中文",
+              "英文",
+              "日文",
+              "韩文",
+              "法文",
+              "德文",
+              "俄文",
+              "西班牙文"
+            ],
+            "description": "目标语言"
+          },
+          "youdaoTranslate.splitIdentifier": {
+            "type": "boolean",
+            "default": true,
+            "description": "翻译前把驼峰 / 下划线命名拆成单词，例如 getUserName → get user name"
+          },
+          "youdaoTranslate.maxLength": {
+            "type": "number",
+            "default": 5000,
+            "description": "单次翻译的最大字符数（有道接口上限 5000，腾讯 6000）"
+          }
+        }
+      },
+      {
+        "title": "有道翻译",
+        "properties": {
+          "youdaoTranslate.appKey": {
+            "type": "string",
+            "default": "",
+            "order": 1,
+            "scope": "application",
+            "ignoreSync": true,
+            "markdownDescription": "有道智云 **应用 ID**，在 [有道智云控制台](https://ai.youdao.com) 的「应用总览」中查看（应用需绑定「文本翻译」服务）"
+          },
+          "youdaoTranslate.appSecret": {
+            "type": "string",
+            "default": "",
+            "order": 2,
+            "scope": "application",
+            "ignoreSync": true,
+            "markdownDescription": "有道智云 **应用密钥**，与应用 ID 在同一页面查看"
+          }
+        }
+      },
+      {
+        "title": "腾讯翻译君",
+        "properties": {
+          "youdaoTranslate.tencentSecretId": {
+            "type": "string",
+            "default": "",
+            "order": 1,
+            "scope": "application",
+            "ignoreSync": true,
+            "markdownDescription": "腾讯云 **SecretId**，在 [访问管理 → API 密钥管理](https://console.cloud.tencent.com/cam/capi) 中创建；需先在控制台开通 [机器翻译](https://console.cloud.tencent.com/tmt)"
+          },
+          "youdaoTranslate.tencentSecretKey": {
+            "type": "string",
+            "default": "",
+            "order": 2,
+            "scope": "application",
+            "ignoreSync": true,
+            "markdownDescription": "腾讯云 **SecretKey**，与 SecretId 在同一页面查看"
+          },
+          "youdaoTranslate.tencentRegion": {
+            "type": "string",
+            "default": "ap-guangzhou",
+            "order": 3,
+            "enum": [
+              "ap-guangzhou",
+              "ap-shanghai",
+              "ap-beijing",
+              "ap-chengdu",
+              "ap-chongqing",
+              "ap-hongkong",
+              "ap-singapore"
+            ],
+            "enumItemLabels": [
+              "华南（广州）",
+              "华东（上海）",
+              "华北（北京）",
+              "西南（成都）",
+              "西南（重庆）",
+              "中国香港",
+              "新加坡"
+            ],
+            "description": "请求接入的地域，选离你近的即可，不影响翻译结果"
+          }
+        }
+      },
+      {
+        "title": "百度翻译",
+        "properties": {
+          "youdaoTranslate.baiduAppId": {
+            "type": "string",
+            "default": "",
+            "order": 1,
+            "scope": "application",
+            "ignoreSync": true,
+            "markdownDescription": "百度翻译 **APP ID**，在 [百度翻译开放平台 → 管理控制台](https://fanyi-api.baidu.com/manage/developer) 中查看（需开通「通用文本翻译」）"
+          },
+          "youdaoTranslate.baiduSecretKey": {
+            "type": "string",
+            "default": "",
+            "order": 2,
+            "scope": "application",
+            "ignoreSync": true,
+            "markdownDescription": "百度翻译 **密钥**，与 APP ID 在同一页面查看"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/vscode": "~1.80.0",
+    "@vscode/vsce": "^3.2.0",
+    "typescript": "^5.4.0"
+  }
+}
