@@ -15,7 +15,7 @@
 
 **方式二：VSIX 文件**
 
-从 [Releases](https://github.com/163hahah/Translation-plugin-/releases) 下载 `.vsix`，在扩展面板右上角 `···` → **从 VSIX 安装**；或在命令行执行：
+从 [Releases](https://github.com/163hahah/Translation-plugin/releases) 下载 `.vsix`，在扩展面板右上角 `···` → **从 VSIX 安装**；或在命令行执行：
 
 ```bash
 code --install-extension youdao-translate-x.y.z.vsix

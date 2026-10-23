@@ -8,11 +8,11 @@
   "icon": "media/logo-128.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/163hahah/Translation-plugin-.git"
+    "url": "https://github.com/163hahah/Translation-plugin.git"
   },
-  "homepage": "https://github.com/163hahah/Translation-plugin-#readme",
+  "homepage": "https://github.com/163hahah/Translation-plugin#readme",
   "bugs": {
-    "url": "https://github.com/163hahah/Translation-plugin-/issues"
+    "url": "https://github.com/163hahah/Translation-plugin/issues"
   },
   "engines": {
     "vscode": "^1.80.0"
